@@ -63,7 +63,7 @@ Once you've sucessfully installed and started the application, you can access th
 
 For the backend replace `<port>` with the specific port number you want to use.
 
-![Alt text](<port env.png>)
+![port env](https://github.com/creative-tutorials/wishme/assets/68476321/814af0e2-b606-406a-863a-d803804e8085)
 
 > [!TIP]  
 > You can hide your `port` if you don't want it to be displayed publicly
