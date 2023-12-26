@@ -7,7 +7,7 @@ To get started with the Wishlist Monorepo, follow these steps:
 ## 1. Clone the repo
 
 ```bash
-git clone <repository_URL>
+git clone https://github.com/creative-tutorials/wishme.git
 ```
 
 ## 2. Install Frontend Dependencies
@@ -62,3 +62,8 @@ pnpm dev
 Once you've sucessfully installed and started the application, you can access the frontend application on the following URL: http://localhost:3000
 
 For the backend replace `<port>` with the specific port number you want to use.
+
+![Alt text](<port env.png>)
+
+> [!TIP]  
+> You can hide your `port` if you don't want it to be displayed publicly
