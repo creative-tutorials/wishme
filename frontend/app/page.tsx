@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUser, SignedIn, SignedOut } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { getAPIURL } from "@/hooks/api-url";
 import Link from "next/link";
 import { Sidebar } from "@/components/layout/main/dashboard/sidebar";
 import { Header } from "@/components/layout/main/dashboard/header";
@@ -98,8 +99,9 @@ export default function Home() {
   const fetchProducts = async () => {
     if (!isSignedIn) return;
 
+    const url = getAPIURL();
     axios
-      .get("http://localhost:8080/api/products", {
+      .get(`${url}/api/products`, {
         headers: {
           "Content-Type": "application/json",
           apikey: process.env.NEXT_PUBLIC_API_KEY,
@@ -194,8 +196,9 @@ export default function Home() {
       cell: ({ row }) => {
         const DeleteProduct = async () => {
           const id = row.getValue("id");
+          const url = getAPIURL();
           axios
-            .delete(`http://localhost:8080/api/products/${id}`, {
+            .delete(`${url}/api/products/${id}`, {
               headers: {
                 "Content-Type": "application/json",
                 apikey: process.env.NEXT_PUBLIC_API_KEY,
