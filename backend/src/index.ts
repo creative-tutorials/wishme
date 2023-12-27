@@ -2,16 +2,16 @@ import dotenv from "dotenv";
 dotenv.config();
 import express, { Express, urlencoded, json } from "express";
 import { Request, Response, NextFunction } from "express";
-import { getXataClient } from "./xata.js";
-// import { ParamsDictionary } from "express-serve-static-core";
-import { typePlatform } from "../types/app-types.js";
+
 import { IncomingHttpHeaders } from "http";
 import { rateLimit } from "express-rate-limit";
 import cors from "cors";
-import puppeteer from "puppeteer";
 import bodyParser from "body-parser";
-import { randomUUID } from "crypto";
-
+import { typePlatform } from "../types/app-types.js";
+import { scrapeProduct } from "../function/scrape.js";
+import { fetchProducts } from "../function/get-products.js";
+import { deleteProduct } from "../function/delete-product.js";
+// import { randomUUID } from "crypto";
 const allowedOrigins = JSON.parse(process.env.ALLOWED_ORIGINS!);
 const corsOptions = {
   origin: allowedOrigins,
@@ -26,19 +26,17 @@ app.use(urlencoded({ limit: "500kb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "500kb", extended: false }));
 const port = process.env.PORT;
 
-if (!process.env.PORT) throw new Error("Port not found");
-
-const xata = getXataClient();
+if (!port) throw new Error("Port not found");
 
 type CustomHeaders = IncomingHttpHeaders & {
   apikey: string;
+  userid: string;
 };
 
-const checkAPIKey = (req: Request, res: Response, next: NextFunction) => {
-  const { apikey } = req.headers as CustomHeaders;
+const validateAuth = (req: Request, res: Response, next: NextFunction) => {
+  const { apikey, userid } = req.headers as CustomHeaders;
   const serverKey = process.env.SERVER_APIKEY;
-  console.log("headers", apikey);
-  if (apikey === serverKey) next();
+  if (apikey === serverKey || userid) next();
   else res.status(401).send({ error: "Unauthorized" });
 };
 
@@ -78,106 +76,62 @@ const checkFieldValue = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const checkRecordField = (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  if (!id) {
+    res.status(400).send({ error: "userid or productid is missing" });
+  } else {
+    next();
+  }
+};
+
 app.post(
   "/api/upload",
-  checkAPIKey,
+  validateAuth,
   checkFieldValue,
   async (req: Request, res: Response) => {
     const { url, platform }: Item = req.body;
-
-    scrapeProduct(url, platform)
-      .then((data) => {
-        res.send(data);
-        console.log("data", data);
-      })
-      .catch((err) => {
-        res.status(500).send(err.message);
-        console.log("err", err);
-      });
+    const { userid } = req.headers as CustomHeaders;
+    try {
+      const data = await scrapeProduct(url, platform, userid);
+      res.send({ data });
+      console.log("data", { data });
+    } catch (err: any) {
+      res.status(500).send({ error: err.message });
+      console.log("err", err);
+    }
   }
 );
 
-async function scrapeProduct(url: string, platform: typePlatform) {
-  console.log("url", url);
-  let browser;
-  try {
-    browser = await puppeteer.launch({
-      headless: "new",
-    });
-  } catch (err) {
-    throw new Error("Failed to launch browser");
-  }
-  const page = await browser?.newPage();
+app.get("/api/products", validateAuth, async (req: Request, res: Response) => {
+  const { userid } = req.headers as CustomHeaders;
 
   try {
-    const website_url = url;
-    await page?.goto(website_url, { waitUntil: "networkidle0" });
-  } catch (err) {
-    throw new Error("Failed to navigate to page");
+    const data = await fetchProducts(userid);
+
+    res.send(data);
+  } catch (err: any) {
+    console.log("err", err);
+    res.status(500).send({ error: err.message });
   }
+});
 
-  const selectors = {
-    amazon: ".a-price-whole",
-    ebay: ".x-price-primary",
-    jumia: ".-prxs",
-  };
-
-  let selector = "";
-
-  if (platform === "amazon" || url.includes("amazon")) {
-    selector = selectors.amazon;
-  } else if (platform === "ebay" || url.includes("ebay")) {
-    selector = selectors.ebay;
-  } else if (platform === "jumia" || url.includes("jumia")) {
-    selector = selectors.jumia;
-  } else {
-    throw new Error("Platform not found");
+app.delete(
+  "/api/products/:id",
+  validateAuth,
+  checkRecordField,
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+      const data = await deleteProduct(id);
+      console.log("delete", data);
+      res.send({ data });
+    } catch (err: any) {
+      res.status(500).send({ error: err.message });
+      console.log(err);
+    }
   }
-
-  const scrapedData = await page.evaluate(
-    (selector, platform, url) => {
-      // select elements from the HTML document..
-      let productName = document.querySelector("h1")?.textContent as string;
-      let price = document.querySelector(selector)?.textContent as string;
-
-      // Check for whitespace and remove if it exists
-      if (productName && productName.includes(" ")) {
-        productName = productName.replace(/\s/g, ""); // removing all whitespace characters from the `productName` string
-      } else {
-        return; // Return nothing if no whitespace is found
-      }
-
-      // Check if selector contains css class of "a-price-whole" or "x-price-primary"
-      if (selector === ".a-price-whole" && price) {
-        price = price.replace(/\n/g, "").replace(".", ""); // Removing all whitespace and the full stop
-      } else if (selector === ".x-price-primary" && price) {
-        price = price.replace(/\s/g, "").replace("US", ""); // Removing all whitespace and the "US" string
-      } else if (selector === ".-prxs" && price) {
-        price = price.replace(/\s/g, ""); // Removing all whitespace
-      }
-      console.log({ platform });
-      // Return data as an object
-      return { platform, url, productName, price };
-    },
-    selector,
-    platform,
-    url
-  );
-
-  await browser.close();
-
-  if (!scrapedData) {
-    throw new Error("Failed to scrape data");
-  } else {
-    const jsonData = scrapedData;
-
-    return jsonData;
-
-    // TODO: Add data to Xata
-  }
-
-  // console.log("data:", jsonData);
-}
+);
 
 app.listen(port, () => {
   console.log(

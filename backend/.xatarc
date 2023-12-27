@@ -1,6 +1,6 @@
 {
   "databaseURL": "https://Timi-s-workspace-eouder.us-east-1.xata.sh/db/wishme",
   "codegen": {
-    "output": "src/xata.ts"
+    "output": "database/xata.ts"
   }
 }
