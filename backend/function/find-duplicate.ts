@@ -21,7 +21,7 @@ export async function checkForDuplicate(name: string, url: string) {
         productName: name,
         url: url,
       })
-      .getAll();
+      .getMany();
     if (records && records.length !== 0) {
       // If there are records (products) that match the provided name and URL, return true (indicating a duplicate)
       return true;
@@ -30,7 +30,8 @@ export async function checkForDuplicate(name: string, url: string) {
       return false;
     }
   } catch (error) {
-    // Logging errors that may occur during database operation
     console.log("error", error);
+    throw error;
+    // Logging errors that may occur during database operation
   }
 }
