@@ -82,7 +82,10 @@ export function Header({ isSignedIn, imageUrl, fullName }: HeaderProps) {
                 <User className="mr-2 h-4 w-4" />
                 <span>Account</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="bg-transparent cursor-pointer focus:bg-zinc-900">
+              <DropdownMenuItem
+                className="bg-transparent cursor-pointer focus:bg-zinc-900"
+                onClick={() => router.push("/billing")}
+              >
                 <CreditCard className="mr-2 h-4 w-4" />
                 <span>Billing</span>
               </DropdownMenuItem>
