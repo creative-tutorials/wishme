@@ -143,15 +143,18 @@ export default function Home() {
     {
       accessorKey: "id",
       header: " ",
+      cell: ({ row }) => <></>,
       enableHiding: true,
       enableColumnFilter: false,
       enableSorting: false,
-      cell: ({ row }) => <></>,
     },
     {
       accessorKey: "url",
       header: " ",
       cell: ({ row }) => <></>,
+      enableHiding: true,
+      enableColumnFilter: false,
+      enableSorting: false,
     },
     {
       accessorKey: "platform",
