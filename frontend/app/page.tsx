@@ -67,6 +67,7 @@ import { Plus } from "lucide-react";
 
 export type Product = {
   id: string;
+  url: string;
   platform: string;
   price: number;
   productName: string;
@@ -81,7 +82,6 @@ type Err = {
 };
 
 export default function Home() {
-  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -141,20 +141,18 @@ export default function Home() {
     },
 
     {
+      id: "id",
       accessorKey: "id",
-      header: " ",
-      cell: ({ row }) => <></>,
+      header: undefined,
+      cell: () => null,
       enableHiding: true,
-      enableColumnFilter: false,
-      enableSorting: false,
     },
     {
+      id: "url",
       accessorKey: "url",
-      header: " ",
-      cell: ({ row }) => <></>,
+      header: undefined,
+      cell: () => null,
       enableHiding: true,
-      enableColumnFilter: false,
-      enableSorting: false,
     },
     {
       accessorKey: "platform",

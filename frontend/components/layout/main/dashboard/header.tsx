@@ -20,7 +20,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CreditCard, History } from "lucide-react";
-import { Users, User, BarChart2, Plus, Gem, LogOut } from "lucide-react";
+import { Users, User, BarChart2, Gem, LogOut } from "lucide-react";
 
 type HeaderProps = SidebarProps;
 
@@ -32,12 +32,7 @@ export function Header({ isSignedIn, imageUrl, fullName }: HeaderProps) {
       className="fixed top-0 left-0 w-full p-4 bg-[#080809]/50 backdrop-blur border-b border-zinc-800 z-10 md:hidden lg:hidden flex items-center justify-between"
     >
       <div id="logo">
-        <Image
-          src="/wishme logo.png"
-          width={30}
-          height={30}
-          alt="wishme logo"
-        />
+        <Image src="/icon.png" width={30} height={30} alt="wishme logo" />
       </div>
       <div id="links" className="flex gap-8">
         <TooltipProvider>
