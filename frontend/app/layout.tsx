@@ -8,7 +8,6 @@ import { dark } from "@clerk/themes";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  generator: "wishme",
   title: "wishme",
   applicationName: "wishme",
   description: "A wishlist for every item you want to buy",
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     images: ["/OG Image2.png"],
-    url: "https://wishme.vercel.app/",
+    url: "https://app-wishme.vercel.app",
   },
 };
 
