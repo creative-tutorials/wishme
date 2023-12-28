@@ -143,6 +143,9 @@ export default function Home() {
     {
       accessorKey: "id",
       header: " ",
+      enableHiding: true,
+      enableColumnFilter: false,
+      enableSorting: false,
       cell: ({ row }) => <></>,
     },
     {
@@ -261,10 +264,10 @@ export default function Home() {
     if (!isSignedIn) return;
     setFormValue((prev) => ({ ...prev, isPending: true }));
 
-    // console.log(user.imageUrl)
+    const url = getAPIURL();
     axios
       .post(
-        "http://localhost:8080/api/upload",
+        `${url}/api/upload`,
         {
           url: formValue.url,
           platform: formValue.platform,
