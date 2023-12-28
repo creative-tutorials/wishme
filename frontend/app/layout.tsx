@@ -17,8 +17,11 @@ export const metadata: Metadata = {
     shortcut: "/icon.png",
     apple: "/icon.png",
   },
+
   openGraph: {
-    images: ["/OG Image2.png"],
+    images: [
+      "https://res.cloudinary.com/derbreilm/image/upload/v1703724471/MetaOG_Image_ybcojw.png",
+    ],
     url: "https://app-wishme.vercel.app",
   },
 };
