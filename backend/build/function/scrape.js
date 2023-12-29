@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import { storeData } from "./store.js";
 import { checkForDuplicate } from "./find-duplicate.js";
 export async function scrapeProduct(url, platform, userid) {
@@ -6,10 +6,8 @@ export async function scrapeProduct(url, platform, userid) {
     let browser;
     try {
         browser = await puppeteer.launch({
-            args: ["--no-sandbox"],
             headless: "new",
-            ignoreHTTPSErrors: true,
-            channel: "chrome",
+            // channel: "chrome",
             // executablePath: "/test",
         });
     }
@@ -18,6 +16,13 @@ export async function scrapeProduct(url, platform, userid) {
         throw new Error("Failed to launch browser");
     }
     const page = await browser?.newPage();
+    try {
+        page.on("request", (request) => request.continue());
+        await page.setRequestInterception(true);
+    }
+    catch (error) {
+        console.log("err from fail new page", error);
+    }
     try {
         const website_url = url;
         await page?.goto(website_url, { waitUntil: "load" });
