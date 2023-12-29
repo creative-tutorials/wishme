@@ -27,7 +27,7 @@ export function Sidebar({ isSignedIn, imageUrl, fullName }: SidebarProps) {
   return (
     <div
       id="sidebar"
-      className="fixed top-0 left-0 h-screen bg-zinc-950 border-r border-neutral-800 p-9 md:flex lg:flex hidden flex-col gap-10 z-10"
+      className="fixed top-0 left-0 h-screen bg-zinc-950 border-r border-neutral-800 p-9 md:flex lg:flex hidden flex-col items-center gap-4 z-10"
     >
       <div id="logo">
         <Image src="/icon.png" width={30} height={30} alt="wishme logo" />
