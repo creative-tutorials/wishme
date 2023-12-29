@@ -38,4 +38,4 @@ scratch/*
 .yarnrc.yml
 
 # Puppeteer Cache
-.cache/*
+.cache/puppeteer

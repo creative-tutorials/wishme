@@ -6,7 +6,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "npx tsc",
+    "build": "concurrently \"npx puppeteer browsers install chrome\" \"npx tsc\"",
     "start": "node build/src/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q build/src/index.js\""
   },
