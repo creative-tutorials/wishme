@@ -10,7 +10,7 @@ export async function scrapeProduct(url, platform, userid) {
         });
     }
     catch (err) {
-        console.log("err from fail lauch", err);
+        console.log("err from fail launch", err);
         throw new Error("Failed to launch browser");
     }
     const page = await browser?.newPage();

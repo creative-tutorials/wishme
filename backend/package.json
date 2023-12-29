@@ -1,7 +1,7 @@
 {
   "name": "wishme-backend",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.1.2",
   "description": "express typescript package v2",
   "main": "index.js",
   "type": "module",
