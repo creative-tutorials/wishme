@@ -1,4 +1,6 @@
 {
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
   "builds": [
     {
       "src": "src/index.ts",
@@ -10,6 +12,5 @@
       "src": "/(.*)",
       "dest": "src/index.ts"
     }
-  ],
-  "includeFiles": [".cache/**"]
+  ]
 }
