@@ -5,10 +5,8 @@ export async function scrapeProduct(url, platform, userid) {
     console.log({ url });
     let browser;
     try {
-        browser = await puppeteer.launch({
-            headless: "new",
-            // channel: "chrome",
-            // executablePath: "/test",
+        browser = await puppeteer.connect({
+            browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.TOKEN}`,
         });
     }
     catch (err) {
@@ -16,13 +14,7 @@ export async function scrapeProduct(url, platform, userid) {
         throw new Error("Failed to launch browser");
     }
     const page = await browser?.newPage();
-    try {
-        page.on("request", (request) => request.continue());
-        await page.setRequestInterception(true);
-    }
-    catch (error) {
-        console.log("err from fail new page", error);
-    }
+    await page?.setCacheEnabled(false); // disable cache
     try {
         const website_url = url;
         await page?.goto(website_url, { waitUntil: "load" });

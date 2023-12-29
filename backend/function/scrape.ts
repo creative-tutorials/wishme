@@ -11,23 +11,15 @@ export async function scrapeProduct(
   console.log({ url });
   let browser: Browser;
   try {
-    browser = await puppeteer.launch({
-      headless: "new",
-
-      // channel: "chrome",
-      // executablePath: "/test",
+    browser = await puppeteer.connect({
+      browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.TOKEN}`,
     });
   } catch (err) {
     console.log("err from fail launch", err);
     throw new Error("Failed to launch browser");
   }
   const page = await browser?.newPage();
-  try {
-    page.on("request", (request) => request.continue());
-    await page.setRequestInterception(true);
-  } catch (error) {
-    console.log("err from fail new page", error);
-  }
+  await page?.setCacheEnabled(false); // disable cache
   try {
     const website_url = url;
     await page?.goto(website_url, { waitUntil: "load" });
