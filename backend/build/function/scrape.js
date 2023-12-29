@@ -6,12 +6,12 @@ export async function scrapeProduct(url, platform, userid) {
     let browser;
     try {
         browser = await puppeteer.connect({
-            browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.TOKEN}`,
+            browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.TOKEN}`, // connect to Browserless
         });
     }
     catch (err) {
         console.log("err from fail launch", err);
-        throw new Error("Failed to launch browser");
+        throw new Error("Failed to launch browser"); // throw error
     }
     const page = await browser?.newPage();
     await page?.setCacheEnabled(false); // disable cache
