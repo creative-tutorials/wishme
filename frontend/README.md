@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
 
-## Getting Started
+<img src="public/icon.png" alt="logo" width="80" />
 
-First, run the development server:
+# wishme
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+a platform for all your wishes
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+</div>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Unified Wishlist**: Centralize wishlists from multiple e-commerce platforms.
 
-## Learn More
+- **Add and Organize**: Easily add items to the wishlist and organize them by categories.
 
-To learn more about Next.js, take a look at the following resources:
+- **Platform Integration**: Support for major e-commerce platforms like Amazon, eBay, etc.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Customization** : Add notes, set priority levels, and track item availability.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- **Notifications**: Receive alerts for price drops or availability changes.
 
-## Deploy on Vercel
+- **Sharing**: Share wishlists with friends and family.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Getting Help
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Encountered an issue or need assistance? Here's how to get help:
+
+- **Issues Tab**: Visit the GitHub repository's "Issues" section and create a new issue, describing the problem encountered.
+
+- **Contact Contributors**: Reach out to the contributors listed in the repository for assistance.
+
+## How to Contribute
+
+Contributions to "wishme" are welcome! Here's how you can contribute:
+
+- **Fork the Repository**: Fork the project repository to your GitHub account.
+
+- **Clone the Fork**: Clone the forked repository to your local machine.
+
+- **Create a Branch**: Create a new branch for your contributions.
+
+- **Make Changes**: Make necessary changes or improvements.
+
+- **Commit Changes**: Commit your changes with descriptive commit messages.
+
+- **Push Changes**: Push your changes to your forked repository.
+
+- **Open a Pull Request**: Create a pull request to merge your changes into the main repository.
