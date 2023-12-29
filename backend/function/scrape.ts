@@ -12,7 +12,11 @@ export async function scrapeProduct(
   let browser: Browser;
   try {
     browser = await puppeteer.launch({
+      args: ["--no-sandbox"],
       headless: "new",
+      ignoreHTTPSErrors: true,
+      channel: "chrome",
+      // executablePath: "/test",
     });
   } catch (err) {
     console.log("err from fail launch", err);

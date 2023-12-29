@@ -6,7 +6,11 @@ export async function scrapeProduct(url, platform, userid) {
     let browser;
     try {
         browser = await puppeteer.launch({
+            args: ["--no-sandbox"],
             headless: "new",
+            ignoreHTTPSErrors: true,
+            channel: "chrome",
+            // executablePath: "/test",
         });
     }
     catch (err) {
