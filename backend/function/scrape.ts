@@ -1,5 +1,5 @@
 import { typePlatform } from "../types/app-types";
-import puppeteer, { Browser } from "puppeteer";
+import puppeteer, { Browser } from "puppeteer-core";
 import { storeData } from "./store.js";
 import { checkForDuplicate } from "./find-duplicate.js";
 

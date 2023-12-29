@@ -44,6 +44,9 @@ dependencies:
   puppeteer:
     specifier: ^21.6.1
     version: 21.6.1(typescript@5.3.3)
+  puppeteer-core:
+    specifier: ^21.6.1
+    version: 21.6.1
   uuid:
     specifier: ^9.0.1
     version: 9.0.1

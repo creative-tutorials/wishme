@@ -1,7 +1,7 @@
 {
   "name": "wishme-backend",
   "private": false,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "express typescript package v2",
   "main": "index.js",
   "type": "module",
@@ -33,6 +33,7 @@
     "fastify": "^4.25.2",
     "mongodb": "^6.3.0",
     "puppeteer": "^21.6.1",
+    "puppeteer-core": "^21.6.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
