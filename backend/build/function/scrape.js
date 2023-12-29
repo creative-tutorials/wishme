@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import { storeData } from "./store.js";
 import { checkForDuplicate } from "./find-duplicate.js";
 export async function scrapeProduct(url, platform, userid) {
