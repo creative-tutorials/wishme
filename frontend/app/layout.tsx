@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   applicationName: "wishme",
   description: "A wishlist for every item you want to buy",
   keywords: ["wislist", "wishme", "cart", "add to cart", "Next.js"],
+  manifest: "/manifest.json",
   icons: {
     icon: "/icon.png",
     shortcut: "/icon.png",
