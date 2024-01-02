@@ -2,7 +2,7 @@
 
 import { isMobile } from "@/hooks/device-detect";
 import { useState, useEffect } from "react";
-import { Sidebar } from "@/components/layout/main/account/account-sidebar";
+import { Sidebar } from "@/components/layout/main/account/sidebar";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -24,28 +24,16 @@ export default function Page() {
       {isLoading ? (
         <p>Loading ...</p>
       ) : (
-        <main className="w-full h-screen">
-          <ResizablePanelGroup
-            direction="horizontal"
-            className="w-full h-full rounded-lg"
-          >
-            <ResizablePanel defaultSize={25}>
-              <Sidebar />
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={75}>
-              <div id="page" className="p-10 w-full">
-                <section id="notifications">
-                  <hgroup className="flex flex-col gap-2">
-                    <h1 className="text-2xl font-medium">Notifications</h1>
-                    <span>
-                      Update your notifications settings and preferences
-                    </span>
-                  </hgroup>
-                </section>
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
+        <main className="w-full h-screen md:flex lg:flex">
+          <Sidebar />
+          <div id="page" className="p-10 w-full">
+            <section id="notifications">
+              <hgroup className="flex flex-col gap-2">
+                <h1 className="text-2xl font-medium">Notifications</h1>
+                <span>Update your notifications settings and preferences</span>
+              </hgroup>
+            </section>
+          </div>
         </main>
       )}
     </>

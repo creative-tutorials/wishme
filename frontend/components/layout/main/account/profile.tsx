@@ -16,8 +16,11 @@ export function Profile(props: {
       id="user-profile"
       className="fixed w-full h-full overflow-y-auto top-0 left-0 bg-black/80 backdrop-blur-md p-10 z-10"
     >
-      <div className="flex items-end justify-end p-40">
-        <X className="cursor-pointer" onClick={() => props.setIsModal(false)} />
+      <div className="p-40">
+        <X
+          className="cursor-pointer fixed top-6 right-10 z-10"
+          onClick={() => props.setIsModal(false)}
+        />
       </div>
       <div className="flex items-center justify-center h-full">
         <UserProfile />

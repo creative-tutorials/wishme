@@ -63,8 +63,8 @@ export function Sidebar({ isSignedIn, imageUrl, fullName }: SidebarProps) {
           <DropdownMenuTrigger asChild>
             <Image
               src={isSignedIn ? (imageUrl as string) : "/vercel.svg"}
-              width={45}
-              height={45}
+              width={30}
+              height={30}
               alt={isSignedIn ? (fullName as string) : "Vercel"}
               className="rounded-full cursor-pointer w-12 h-12 object-cover"
             />
@@ -89,18 +89,7 @@ export function Sidebar({ isSignedIn, imageUrl, fullName }: SidebarProps) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                className="bg-transparent cursor-pointer focus:bg-zinc-900"
-                onClick={() => router.push("/team")}
-              >
-                <Users className="mr-2 h-4 w-4" />
-                <span>Team</span>
-                <DropdownMenuShortcut className="flex items-center gap-1">
-                  <Gem className="w-3 h-3" /> Pro
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <SignOutButton>

@@ -39,7 +39,7 @@ export function Header({ isSignedIn, imageUrl, fullName }: HeaderProps) {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link href="/profile">
-                <History className="w-5 h-5" />
+                <History className="w-6 h-6" />
               </Link>
             </TooltipTrigger>
             <TooltipContent>
@@ -51,7 +51,7 @@ export function Header({ isSignedIn, imageUrl, fullName }: HeaderProps) {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link href="/analytics">
-                <BarChart2 className="w-5 h-5" />
+                <BarChart2 className="w-6 h-6" />
               </Link>
             </TooltipTrigger>
             <TooltipContent>
@@ -91,18 +91,7 @@ export function Header({ isSignedIn, imageUrl, fullName }: HeaderProps) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                className="bg-transparent cursor-pointer focus:bg-zinc-900"
-                onClick={() => router.push("/team")}
-              >
-                <Users className="mr-2 h-4 w-4" />
-                <span>Team</span>
-                <DropdownMenuShortcut className="flex items-center gap-1">
-                  <Gem className="w-3 h-3" /> Pro
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <SignOutButton>

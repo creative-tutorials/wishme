@@ -5,7 +5,7 @@ export function Sidebar() {
   return (
     <div
       id="sidebar"
-      className="p-10 bg-[#080809] border-r border-zinc-900 w-full max-w-72 h-full flex flex-col gap-4"
+      className="p-10 bg-[#080809] border-r border-zinc-900 w-full max-w-72 h-full md:flex lg:flex flex-col hidden gap-4"
     >
       <div id="top-side" className="w-full h-full flex flex-col gap-4">
         <div id="general">
@@ -17,19 +17,13 @@ export function Sidebar() {
               href="/account"
               className="p-1 px-4 transition-all w-full hover:bg-zinc-900 rounded-md hover:underline"
             >
-              Account Management
+              Account
             </Link>
             <Link
-              href="/account/security"
+              href="/account/cloud"
               className="p-1 px-4 transition-all w-full hover:bg-zinc-900 rounded-md hover:underline"
             >
-              Security
-            </Link>
-            <Link
-              href="/team"
-              className="p-1 px-4 transition-all w-full hover:bg-zinc-900 rounded-md hover:underline"
-            >
-              Team
+              Cloud Usage
             </Link>
           </div>
         </div>

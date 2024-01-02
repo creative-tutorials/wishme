@@ -106,10 +106,10 @@ export default function Billing() {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel className="hover:bg-white hover:text-black">
+                    <AlertDialogCancel className="hover:bg-zinc-800 border-zinc-800">
                       Cancel
                     </AlertDialogCancel>
-                    <AlertDialogAction className="hover:bg-slate-200 hover:text-black">
+                    <AlertDialogAction className="bg-white hover:bg-slate-200 text-black">
                       Continue
                     </AlertDialogAction>
                   </AlertDialogFooter>
@@ -212,16 +212,6 @@ export default function Billing() {
                 <span>Billing</span>
                 <CommandShortcut className="text-neutral-500">
                   ⌘B
-                </CommandShortcut>
-              </CommandItem>
-            </Link>
-            <Link href="/team">
-              <CommandItem>
-                <Users className="mr-2 h-4 w-4" />
-                <span>Team</span>
-                <CommandShortcut className="flex items-center gap-1 text-neutral-500">
-                  {" "}
-                  <Gem className="w-3 h-3" /> Pro
                 </CommandShortcut>
               </CommandItem>
             </Link>
