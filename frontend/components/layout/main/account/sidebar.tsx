@@ -20,10 +20,10 @@ export function Sidebar() {
               Account
             </Link>
             <Link
-              href="/account/cloud"
+              href="/account/budget"
               className="p-1 px-4 transition-all w-full hover:bg-zinc-900 rounded-md hover:underline"
             >
-              Cloud Usage
+              Budget
             </Link>
           </div>
         </div>

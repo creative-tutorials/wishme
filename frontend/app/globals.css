@@ -21,3 +21,6 @@ body {
   color: rgb(var(--foreground-rgb));
   background: #080809;
 }
+.MuiChartsLegend-series > text tspan {
+  fill: white;
+}

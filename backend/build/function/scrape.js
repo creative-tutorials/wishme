@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import { storeData } from "./store.js";
-import { checkForDuplicate } from "./find-duplicate.js";
+import { checkForDuplicate } from "./check-duplicate.js";
 export async function scrapeProduct(url, platform, userid) {
     console.log({ url });
     let browser;

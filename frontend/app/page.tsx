@@ -9,6 +9,7 @@ import { getAPIURL } from "@/hooks/api-url";
 import Link from "next/link";
 import { Sidebar } from "@/components/layout/main/dashboard/sidebar";
 import { Header } from "@/components/layout/main/dashboard/header";
+
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -21,7 +22,11 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown, MoreHorizontal } from "lucide-react";
+import { useCategories } from "@/hooks/use-categories";
+import { useCountryCodes } from "@/hooks/country-codes";
+import { CategoriesCN } from "./types/categories";
+
+import { Settings2, MoreHorizontal } from "lucide-react";
 import { Spinner } from "@/components/layout/animation/Spinner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
@@ -63,14 +68,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { Wallet } from "lucide-react";
 
 export type Product = {
   id: string;
-  url: string;
-  platform: string;
-  price: number;
-  productName: string;
+  title: string;
+  category: string;
+  price: string;
+  code: string;
+  date: string;
 };
 
 type Err = {
@@ -84,24 +90,29 @@ type Err = {
 export default function Home() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    id: false,
+    code: false,
+  });
   const [rowSelection, setRowSelection] = useState({});
   const [count, setCount] = useState(0);
   const { toast } = useToast();
   const { isSignedIn, user } = useUser();
   const [formValue, setFormValue] = useState({
-    url: "",
-    platform: "",
+    title: "",
+    category: "",
+    price: "",
+    code: "",
     isPending: false,
   });
   const [data, setData] = useState<Product[]>([]);
 
-  const fetchProducts = async () => {
+  const fetchExpenses = async () => {
     if (!isSignedIn) return;
 
     const url = getAPIURL();
     axios
-      .get(`${url}/api/products`, {
+      .get(`${url}/api/expense`, {
         headers: {
           "Content-Type": "application/json",
           apikey: process.env.NEXT_PUBLIC_API_KEY,
@@ -113,6 +124,7 @@ export default function Home() {
       })
       .catch(async (err) => {
         console.error(err.response);
+        setData([]);
       });
   };
 
@@ -145,82 +157,103 @@ export default function Home() {
       accessorKey: "id",
       header: undefined,
       cell: () => null,
-      enableHiding: true,
+      enableHiding: false,
     },
     {
-      id: "url",
-      accessorKey: "url",
-      header: undefined,
-      cell: () => null,
-      enableHiding: true,
-    },
-    {
-      accessorKey: "platform",
-      header: "platform",
+      accessorKey: "title",
+      header: "title",
       cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("platform")}</div>
+        <p className="capitalize whitespace-nowrap">{row.getValue("title")}</p>
       ),
     },
     {
-      accessorKey: "productName",
-      header: "product name",
+      accessorKey: "category",
+      header: "category",
       cell: ({ row }) => {
-        const name: string = row.getValue("productName");
-        const split = name.substring(0, 80) + "...";
-        const product_url: string = row.getValue("url");
+        const name: string = row.getValue("category");
+        const split = name.substring(0, 30) + "...";
 
         return (
-          <div title={name}>
-            <Link href={product_url} target="_blank" className="capitalize">
-              {" "}
-              {split}
-            </Link>
-          </div>
+          <p className="whitespace-nowrap" title={name}>
+            {split}
+          </p>
+        );
+      },
+    },
+    {
+      accessorKey: "code",
+      header: "code",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const name: string = row.getValue("code");
+
+        return (
+          <p className="whitespace-nowrap" title={name}>
+            {name}
+          </p>
         );
       },
     },
     {
       accessorKey: "price",
-      header: () => <div className="text-right">price</div>,
+      header: "price",
       cell: ({ row }) => {
-        const pricing: string = row.getValue("price");
+        const pricing = parseInt(row.getValue("price"));
 
         // Format the pricing as a dollar pricing
-        // const formatted = new Intl.NumberFormat("en-US", {
-        //   style: "currency",
-        //   currency: "USD",
-        // }).format(pricing);
+        const formatted = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: row.getValue("code"),
+        }).format(pricing);
 
-        return <div className="text-right font-medium">{pricing}</div>;
+        return (
+          <p title={formatted} className="font-medium">
+            {formatted}
+          </p>
+        );
       },
+    },
+    {
+      accessorKey: "date",
+      header: "date",
+      cell: ({ row }) => (
+        <p className="whitespace-nowrap">{row.getValue("date")}</p>
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
     {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const DeleteProduct = async () => {
+        const deleteExpense = async () => {
           const id = row.getValue("id");
           const url = getAPIURL();
-          axios
-            .delete(`${url}/api/products/${id}`, {
-              headers: {
-                "Content-Type": "application/json",
-                apikey: process.env.NEXT_PUBLIC_API_KEY,
-              },
-            })
-            .then((res) => {
-              toast({
-                description: res.data.data,
+
+          if (!isSignedIn) {
+            return;
+          } else {
+            axios
+              .delete(`${url}/api/expense/${id}`, {
+                headers: {
+                  "Content-Type": "application/json",
+                  apikey: process.env.NEXT_PUBLIC_API_KEY,
+                },
+              })
+              .then((res) => {
+                toast({
+                  description: res.data.data,
+                });
+                fetchExpenses();
+              })
+              .catch((err) => {
+                console.error(err.response);
+                toast({
+                  variant: "destructive",
+                  description: err.response.data.error,
+                });
               });
-              fetchProducts();
-            })
-            .catch((err) => {
-              console.error(err.response);
-              toast({
-                variant: "destructive",
-                description: err.response.data.error,
-              });
-            });
+          }
         };
 
         return (
@@ -240,7 +273,7 @@ export default function Home() {
               <DropdownMenuSeparator className="w-auto h-[0.01rem] bg-neutral-700" />
               <DropdownMenuItem
                 className="bg-transparent cursor-pointer focus:bg-red-600 focus:text-red-200 text-red-300"
-                onClick={DeleteProduct}
+                onClick={deleteExpense}
               >
                 Remove
               </DropdownMenuItem>
@@ -254,7 +287,7 @@ export default function Home() {
   useEffect(() => {
     setCount((prev) => prev + 1);
 
-    count === 1 && fetchProducts();
+    count === 1 && fetchExpenses();
 
     return () => {
       setCount(0);
@@ -270,8 +303,10 @@ export default function Home() {
       .post(
         `${url}/api/upload`,
         {
-          url: formValue.url,
-          platform: formValue.platform,
+          title: formValue.title,
+          category: formValue.category,
+          price: formValue.price,
+          code: formValue.code,
         },
         {
           headers: {
@@ -285,12 +320,14 @@ export default function Home() {
         toast({
           description: res.data.data,
         });
-        fetchProducts();
+        fetchExpenses();
         setFormValue((prev) => ({
           ...prev,
           isPending: false,
-          url: "",
-          platform: "",
+          title: "",
+          category: "",
+          price: "",
+          code: "",
         }));
       })
 
@@ -315,6 +352,7 @@ export default function Home() {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    debugTable: true,
     state: {
       sorting,
       columnFilters,
@@ -339,62 +377,112 @@ export default function Home() {
           <div id="page" className="w-full h-screen">
             <section className="flex flex-col gap-4 w-full md:p-10 lg:p-10 p-2 md:px-32 lg:px-32 md:mt-0 lg:mt-0 mt-28">
               <div id="top" className="flex flex-wrap justify-between">
-                <hgroup>
-                  <h1 className="text-2xl font-medium">Wishes</h1>
-                </hgroup>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button className="x bg-indigo-600 hover:bg-indigo-700 rounded flex gap-2">
-                      <Plus /> New wish
+                      <Wallet /> Record Expense
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px] bg-zinc-950 border border-zinc-700">
                     <DialogHeader>
-                      <DialogTitle>Place a wish</DialogTitle>
+                      <DialogTitle>Record an expense</DialogTitle>
                     </DialogHeader>
                     {/* add separator */}
                     <Separator className="my-1 bg-zinc-500" />
                     <div className="flex flex-col gap-4">
                       <div className="flex flex-col gap-4">
                         <Label htmlFor="name" className="">
-                          Product URL
+                          Title
                         </Label>
                         <Input
                           id="name"
                           autoComplete="off"
-                          type="url"
-                          placeholder="https://e-commerce.com/product/123456"
+                          type="text"
+                          placeholder="give your expense a name"
                           className="col-span-3 placeholder:text-gray-400"
                           disabled={formValue.isPending}
                           onChange={(e) =>
-                            setFormValue({ ...formValue, url: e.target.value })
+                            setFormValue({
+                              ...formValue,
+                              title: e.target.value,
+                            })
                           }
-                          value={formValue.url}
+                          value={formValue.title}
                         />
                       </div>
                       <div className="flex flex-col gap-4">
                         <Label htmlFor="username" className="">
-                          Platform
+                          Categories
                         </Label>
                         <Select
-                          defaultValue={formValue.platform}
+                          defaultValue={formValue.category}
                           disabled={formValue.isPending}
                           onValueChange={(value) =>
-                            setFormValue({ ...formValue, platform: value })
+                            setFormValue({ ...formValue, category: value })
                           }
                         >
                           <SelectTrigger className="w-full text-gray-400">
-                            <SelectValue placeholder="Select a platform" />
+                            <SelectValue placeholder="Select a category" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Platforms</SelectLabel>
-                              <SelectItem value="amazon">Amazon</SelectItem>
-                              <SelectItem value="ebay">Ebay</SelectItem>
-                              <SelectItem value="jumia">Jumia</SelectItem>
-                            </SelectGroup>
+                            {useCategories().map((category: CategoriesCN) => (
+                              <SelectGroup key={category.key}>
+                                <SelectLabel>{category.key}</SelectLabel>
+                                {category.data.map((item) => (
+                                  <SelectItem key={item} value={item}>
+                                    {item}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            ))}
                           </SelectContent>
                         </Select>
+                      </div>
+                      <div className="flex flex-col gap-4">
+                        <Label htmlFor="price" className="">
+                          Price
+                        </Label>
+                        <div className="flex md:flex-row lg:flex-row flex-col gap-4">
+                          <Input
+                            id="price"
+                            autoComplete="off"
+                            type="number"
+                            placeholder="cost of the expense"
+                            className="col-span-3 placeholder:text-gray-400"
+                            disabled={formValue.isPending}
+                            onChange={(e) =>
+                              setFormValue({
+                                ...formValue,
+                                price: e.target.value,
+                              })
+                            }
+                            value={formValue.price}
+                          />
+                          <Select
+                            defaultValue={formValue.code}
+                            disabled={formValue.isPending}
+                            onValueChange={(value) =>
+                              setFormValue({ ...formValue, code: value })
+                            }
+                          >
+                            <SelectTrigger className="w-full text-gray-400">
+                              <SelectValue placeholder="currency code" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectLabel>Currency</SelectLabel>
+                                {useCountryCodes().map((country) => (
+                                  <SelectItem
+                                    key={country.code}
+                                    value={country.code}
+                                  >
+                                    {country.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
                     </div>
                     <DialogFooter>
@@ -418,21 +506,21 @@ export default function Home() {
               </div>
               <div id="middle">
                 <hgroup>
-                  <h2 className="text-xl font-medium">Wish table</h2>
+                  <h2 className="text-xl font-medium">Expense table</h2>
                 </hgroup>
                 <div id="list">
                   <div className="w-full">
                     <div className="flex flex-wrap md:gap-0 lg:gap-0 gap-4 items-center py-4">
                       <Input
-                        placeholder="Filter by product name..."
+                        placeholder="Filter by title..."
                         value={
                           (table
-                            .getColumn("productName")
+                            .getColumn("title")
                             ?.getFilterValue() as string) ?? ""
                         }
                         onChange={(event) =>
                           table
-                            .getColumn("productName")
+                            .getColumn("title")
                             ?.setFilterValue(event.target.value)
                         }
                         className="max-w-sm border border-zinc-700"
@@ -441,9 +529,9 @@ export default function Home() {
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="outline"
-                            className="ml-auto border border-zinc-700 hover:bg-zinc-600/20"
+                            className="ml-auto border border-zinc-700 hover:bg-zinc-600/20 flex items-center gap-1"
                           >
-                            Columns <ChevronDown className="ml-2 h-4 w-4" />
+                            <Settings2 className="h-4 w-4" /> View
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -471,13 +559,17 @@ export default function Home() {
                       </DropdownMenu>
                     </div>
                     <div className="rounded-md border-none">
+                      {/* limit the table to only show 5 per page */}
                       <Table className="rounded-md bg-zinc-950">
                         <TableHeader>
                           {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                               {headerGroup.headers.map((header) => {
                                 return (
-                                  <TableHead key={header.id}>
+                                  <TableHead
+                                    key={header.id}
+                                    colSpan={header.colSpan}
+                                  >
                                     {header.isPlaceholder
                                       ? null
                                       : flexRender(
@@ -496,7 +588,6 @@ export default function Home() {
                               <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
-                                className=""
                               >
                                 {row.getVisibleCells().map((cell) => (
                                   <TableCell key={cell.id}>
@@ -522,10 +613,19 @@ export default function Home() {
                       </Table>
                     </div>
                     <div className="flex items-center justify-end space-x-2 py-4">
-                      <div className="flex-1 text-sm text-muted-foreground">
-                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                        {table.getFilteredRowModel().rows.length} row(s)
-                        selected.
+                      <div className="flex-1 flex md:flex-row lg:flex-row flex-col md:items-center lg:items-center gap-3 text-sm text-muted-foreground">
+                        {table.getFilteredSelectedRowModel().rows.length >
+                          0 && (
+                          <span className="md:text-base lg:text-base text-sm">
+                            {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                            {table.getFilteredRowModel().rows.length} row(s)
+                            selected.
+                          </span>
+                        )}
+                        <span className="md:text-base lg:text-base text-sm">
+                          {table.getState().pagination.pageIndex + 1} of{" "}
+                          {table.getPageCount()} page(s).
+                        </span>
                       </div>
                       <div className="space-x-2">
                         <Button
@@ -544,6 +644,38 @@ export default function Home() {
                         >
                           Next
                         </Button>
+                      </div>
+                      <div>
+                        <Select
+                          value={table
+                            .getState()
+                            .pagination.pageSize.toString()}
+                          onValueChange={(value) =>
+                            table.setPageSize(Number(value))
+                          }
+                          defaultValue={table
+                            .getState()
+                            .pagination.pageSize.toString()}
+                        >
+                          <SelectTrigger className="w-[100px] text-gray-400">
+                            <SelectValue
+                              placeholder={table.getState().pagination.pageSize}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Page Size</SelectLabel>
+                              {[10, 20, 30, 40, 50].map((pageSize) => (
+                                <SelectItem
+                                  key={pageSize}
+                                  value={`${pageSize}`}
+                                >
+                                  Show {pageSize}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                   </div>

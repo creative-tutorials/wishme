@@ -9,7 +9,7 @@ import { Sidebar } from "@/components/layout/main/account/sidebar";
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { Profile } from "@/components/layout/main/account/profile";
-import { UserRound, FileBarChart2, BellDot, Home } from "lucide-react";
+import { UserRound, PiggyBank, BellDot, Home } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -88,12 +88,12 @@ function Footer() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href="/account/cloud">
-                  <FileBarChart2 className="w-8" />
+                <Link href="/account/budget">
+                  <PiggyBank className="w-8" />
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Cloud Usage</p>
+                <p>Budget</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -157,7 +157,7 @@ function Content(props: {
               height={30}
               alt={props.userX.name}
               className="rounded-full object-cover w-40 h-40 max-w-none"
-              unoptimized
+              unoptimized // Disable image optimization
             />
           </div>
           <div id="xyz" className="flex flex-col gap-3 w-full">

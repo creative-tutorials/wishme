@@ -23,6 +23,26 @@ const tables = [
             { name: "userid", type: "string" },
         ],
     },
+    {
+        name: "usage",
+        columns: [
+            { name: "userid", type: "string" },
+            { name: "username", type: "string" },
+            { name: "usage", type: "int" },
+            { name: "limit", type: "int" },
+        ],
+    },
+    {
+        name: "expense",
+        columns: [
+            { name: "userid", type: "string" },
+            { name: "title", type: "string" },
+            { name: "category", type: "string" },
+            { name: "code", type: "string" },
+            { name: "price", type: "string" },
+            { name: "date", type: "string" },
+        ],
+    },
 ];
 const DatabaseClient = buildClient();
 const defaultOptions = {

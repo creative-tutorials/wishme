@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SignOutButton } from "@clerk/nextjs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -19,8 +19,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { CreditCard, History } from "lucide-react";
-import { Users, User, BarChart2, Plus, Gem, LogOut } from "lucide-react";
+import { CreditCard } from "lucide-react";
+import { User, BarChart2, LogOut } from "lucide-react";
 
 export function Sidebar({ isSignedIn, imageUrl, fullName }: SidebarProps) {
   const router = useRouter();
@@ -33,18 +33,6 @@ export function Sidebar({ isSignedIn, imageUrl, fullName }: SidebarProps) {
         <Image src="/icon.png" width={30} height={30} alt="wishme logo" />
       </div>
       <div id="links" className="flex flex-col gap-8">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link href="/history">
-                <History />
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>List History</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -61,13 +49,15 @@ export function Sidebar({ isSignedIn, imageUrl, fullName }: SidebarProps) {
       <div id="profile" className="mt-auto">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Image
-              src={isSignedIn ? (imageUrl as string) : "/vercel.svg"}
-              width={30}
-              height={30}
-              alt={isSignedIn ? (fullName as string) : "Vercel"}
-              className="rounded-full cursor-pointer w-12 h-12 object-cover"
-            />
+            <Avatar>
+              <AvatarImage
+                src={isSignedIn ? (imageUrl as string) : "/vercel.svg"}
+                alt="@shadcn"
+              />
+              <AvatarFallback>
+                {isSignedIn && (fullName?.substring(0, 2) as string)}
+              </AvatarFallback>
+            </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 bg-zinc-950 border border-zinc-700/50">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -88,9 +78,8 @@ export function Sidebar({ isSignedIn, imageUrl, fullName }: SidebarProps) {
                 <span>Billing</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
 
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="w-auto h-[0.01rem] bg-zinc-700/50" />
             <DropdownMenuGroup>
               <SignOutButton>
                 <DropdownMenuItem className="bg-transparent cursor-pointer focus:bg-red-600 focus:text-red-200 text-red-300">

@@ -8,10 +8,17 @@ import { dark } from "@clerk/themes";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "wishme",
-  applicationName: "wishme",
-  description: "A wishlist for every item you want to buy",
-  keywords: ["wislist", "wishme", "cart", "add to cart", "Next.js"],
+  title: "Expi",
+  applicationName: "expi",
+  description: "A simple expense tracker to help you save money.",
+  keywords: [
+    "expro",
+    "expro",
+    "cart",
+    "expense tracker",
+    "next.js",
+    "save money",
+  ],
   manifest: "/manifest.json",
   icons: {
     icon: "/icon.png",

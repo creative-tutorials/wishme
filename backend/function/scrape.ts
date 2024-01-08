@@ -1,7 +1,7 @@
 import { typePlatform } from "../types/app-types";
 import puppeteer, { Browser } from "puppeteer";
 import { storeData } from "./store.js";
-import { checkForDuplicate } from "./find-duplicate.js";
+import { checkForDuplicate } from "./check-duplicate.js";
 
 export async function scrapeProduct(
   url: string,
